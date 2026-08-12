@@ -95,19 +95,23 @@ private:
 	}
 
 	// encrypts a file
-	void encryptFile(string inputName, string outputName)
+	void encryptFile()
 	{
-		ifstream inputFile(inputName);
-		ofstream outputFile(outputName);
-
+		ifstream inputFile(GetInputFileName());
 		if (!inputFile)
 		{
 			cout << "Error opening the input file." << endl;
 			return;
 		}
 
-		char letter;
+		ofstream outputFile(GetOutputFileName());
+		if (!outputFile)
+		{
+			cout << "Error creating or opening the output file. Do you have permission?" << endl;
+			return;
+		}
 
+		char letter;
 		while (inputFile.get(letter))
 		{
 			outputFile << encryptCharacter(letter);
@@ -120,14 +124,19 @@ private:
 	}
 
 	// decrypts a file
-	void decryptFile(string inputName, string outputName)
+	void decryptFile()
 	{
-		ifstream inputFile(inputName);
-		ofstream outputFile(outputName);
-
+		ifstream inputFile(GetInputFileName());
 		if (!inputFile)
 		{
 			cout << "Error opening the input file." << endl;
+			return;
+		}
+
+		ofstream outputFile(GetOutputFileName());
+		if (!outputFile)
+		{
+			cout << "Error creating or opening the output file. Do you have permission?" << endl;
 			return;
 		}
 
@@ -145,10 +154,70 @@ private:
 
 	}
 
+	string mInputFileName;
+	string mOutputFileName;
+
 public:
 
+	const string& GetInputFileName() const  { return mInputFileName;  }
+	const string& GetOutputFileName() const { return mOutputFileName; }
+
+	bool IsValidFile(const string& FileName)
+	{
+		if (FileName.empty()) return false;
+		ifstream FileToTest(FileName);
+		return FileToTest.good();
+	};
+
+	// runs the program based on arguments
+	bool parseArguments(int argc, char* argv[], string& choice, string& keyword)
+	{
+		if (argc != 4)
+		{
+			cerr << "Usage: <-e|-d> -k<keyword> <input_file> <output_file>" << endl;
+			return false;
+		}
+
+		string CryptDirection{ argv[0] };
+		string KeywordArg{ argv[1] };
+
+		if (CryptDirection == "-d")
+			choice = "D";
+
+		else if (CryptDirection == "-e")
+			choice = "E";
+
+		else
+		{
+			cerr << "Invalid Crypt Direction. Use -e or -d.";
+		}
+
+		if (KeywordArg.substr(0, 2) != "-k")
+		{
+			cerr << "Crypt Keyword must be specified using -k<keyword>, without spaces.";
+			return false;
+		}
+
+		keyword = KeywordArg.substr(2); // Trim -k and leave the rest.
+		mInputFileName = argv[2];
+		if (!IsValidFile(GetInputFileName()))
+		{
+			cerr << "The input file could not be opened as specified: " << GetInputFileName() << endl;
+			return false;
+		}
+
+		mOutputFileName = argv[3];
+		if (!IsValidFile(GetOutputFileName()))
+		{
+			cerr << "The input file could not be opened as specified: " << GetOutputFileName() << endl;
+			return false;
+		}
+
+		return true;
+	}
+
 	// runs the program
-	void run()
+	void run(int argc, char* argv[])
 	{
 		string choice;
 		string keyword;
@@ -158,42 +227,75 @@ public:
 		cout << "Random Monoalphabetic Cipher" << endl;
 		cout << "----------------------------" << endl;
 
-		cout << "Enter 'E' to encrypt or 'D' to decrypt: ";
-		cin >> choice;
+		do
+		{
+			cout << "Enter 'E' (or leave blank) to encrypt or 'D' to decrypt: ";
+			getline(cin, choice);
 
-		cout << "Enter the keyword: ";
-		cin >> keyword;
+			if (choice.empty())
+				choice = 'E';
 
-		cout << "Enter the input file name: ";
-		cin >> inputFile;
+			choice = toupper(choice[0]);
+			if (choice != "E" && choice != "D")
+				cerr << "Invalid Selection" << endl;
 
-		cout << "Enter the output file name: ";
-		cin >> outputFile;
+		} while (choice != "E" && choice != "D");
+
+		// Ensures a keyword is provided (assignment requirement).
+		do
+		{
+			cout << "Enter the keyword: ";
+			getline(cin, keyword);
+
+			if (keyword.empty())
+				cerr << "Keyword cannot be empty. Try again." << endl;
+
+		} while (keyword.empty());
+
+		// Validate input file as a valid file.
+		do
+		{
+			cout << "Enter the input file name: ";
+			getline(cin, inputFile);
+
+		} while (!IsValidFile(inputFile));
+		mInputFileName = inputFile;
+
+		// Ensure output file is a valid target and not the same as the input file.
+		do
+		{
+			cout << "Enter the output file name (relative to project folder): ";
+			getline(cin, outputFile);
+
+			if (outputFile.empty())
+				cerr << "Output file must be specified. Try again." << endl;
+
+			else if (outputFile == GetInputFileName())
+				cerr << "Input and Output files must be a different file. Try again." << endl;
+
+		} while (outputFile.empty() || outputFile == GetInputFileName());
+		mOutputFileName = outputFile;
 
 		createCipher(keyword);
 
-		if (choice == "E" || choice == "e")
-		{
-			encryptFile(inputFile, outputFile);
-		}
-		else if (choice == "D" || choice == "d")
-		{
-			decryptFile(inputFile, outputFile);
-		}
+		if (choice == "E")
+			encryptFile();
+
+		else if (choice == "D")
+			decryptFile();
+
 		else
-		{
 			cout << "Invalid selection." << endl;
-		}
 	}
 
 };
 
 // main driver
-int main()
+int main(int argc, char* argv[])
 {
 	MonoalphabetCipher Cipher;
 
-	Cipher.run();
+	Cipher.run(argc, argv);
 
 	return 0;
 }

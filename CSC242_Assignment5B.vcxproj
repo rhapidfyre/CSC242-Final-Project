@@ -125,6 +125,11 @@
   <ItemGroup>
     <ClCompile Include="CSC242_Assignment5B.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="decrypted.txt" />
+    <Text Include="encrypted.txt" />
+    <Text Include="test.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
