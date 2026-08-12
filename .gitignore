@@ -1,6 +1,11 @@
 # Prerequisites
 *.d
 
+# Binaries
+CSC242_A.*
+CSC242_B.*
+x64/**/*
+
 # Compiled Object files
 *.slo
 *.lo
@@ -30,3 +35,6 @@
 *.exe
 *.out
 *.app
+.git/**/*
+.github/**/*
+.vs/**/*

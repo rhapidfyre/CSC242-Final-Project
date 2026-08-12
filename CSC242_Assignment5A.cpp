@@ -7,8 +7,13 @@
 using namespace std;
 
 
+/**
+ * A class to centralize vector manipulation in one place.
+ * Prevents having to add, remove, search, erase, etc., in multiple places in the code.
+ */
 class WordContainer
 {
+
 public:
 
 	int Contains(string CompareWord) const
