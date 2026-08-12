@@ -1,0 +1,5 @@
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+FEATHER keyword round-trip test.
+Hello, World! 12345
+Punctuation stays: .,!?;:-_()[]{}

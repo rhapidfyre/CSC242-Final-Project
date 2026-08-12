@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <cctype>
+#include <cstdlib>
 
 using namespace std;
 
@@ -172,14 +173,14 @@ public:
 	// runs the program based on arguments
 	bool parseArguments(int argc, char* argv[], string& choice, string& keyword)
 	{
-		if (argc != 4)
+		if (argc != 5)
 		{
 			cerr << "Usage: <-e|-d> -k<keyword> <input_file> <output_file>" << endl;
 			return false;
 		}
 
-		string CryptDirection{ argv[0] };
-		string KeywordArg{ argv[1] };
+		string CryptDirection{ argv[1] };
+		string KeywordArg{ argv[2] };
 
 		if (CryptDirection == "-d")
 			choice = "D";
@@ -190,6 +191,7 @@ public:
 		else
 		{
 			cerr << "Invalid Crypt Direction. Use -e or -d.";
+			return false;
 		}
 
 		if (KeywordArg.substr(0, 2) != "-k")
@@ -199,17 +201,17 @@ public:
 		}
 
 		keyword = KeywordArg.substr(2); // Trim -k and leave the rest.
-		mInputFileName = argv[2];
+		mInputFileName = argv[3];
 		if (!IsValidFile(GetInputFileName()))
 		{
 			cerr << "The input file could not be opened as specified: " << GetInputFileName() << endl;
 			return false;
 		}
 
-		mOutputFileName = argv[3];
-		if (!IsValidFile(GetOutputFileName()))
+		mOutputFileName = argv[4];
+		if (GetInputFileName() == GetOutputFileName())
 		{
-			cerr << "The input file could not be opened as specified: " << GetOutputFileName() << endl;
+			cerr << "Input and Output files must be different." << endl;
 			return false;
 		}
 
@@ -217,7 +219,7 @@ public:
 	}
 
 	// runs the program
-	void run(int argc, char* argv[])
+	void run()
 	{
 		string choice;
 		string keyword;
@@ -276,16 +278,15 @@ public:
 		} while (outputFile.empty() || outputFile == GetInputFileName());
 		mOutputFileName = outputFile;
 
-		createCipher(keyword);
+		Algorithm(choice, keyword);
+	}
 
-		if (choice == "E")
-			encryptFile();
-
-		else if (choice == "D")
-			decryptFile();
-
-		else
-			cout << "Invalid selection." << endl;
+	void Algorithm(const string& InChoice, const string& InKeyword)
+	{
+		createCipher(InKeyword);
+		if (InChoice == "E")	  encryptFile();
+		else if (InChoice == "D") decryptFile();
+		else					  cout << "Invalid selection." << endl;
 	}
 
 };
@@ -295,7 +296,16 @@ int main(int argc, char* argv[])
 {
 	MonoalphabetCipher Cipher;
 
-	Cipher.run(argc, argv);
+	if (argc == 1)
+	{
+		Cipher.run();
+		return EXIT_SUCCESS;
+	}
 
-	return 0;
+	string choice, keyword;
+	if (!Cipher.parseArguments(argc, argv, choice, keyword))
+		return EXIT_FAILURE;
+
+	Cipher.Algorithm(choice, keyword);
+	return EXIT_SUCCESS;
 }
