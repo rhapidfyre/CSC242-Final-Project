@@ -1,0 +1,28 @@
+the quick brown foox jumped over the lazy dog
+
+quick
+brown
+fox
+jumped
+over
+the
+lazy
+dog
+
+the     quick     brown     fox
+
+lorem ipsum dolor sit amet consectetur adipiscing elit
+lorem ipsom dolor sitt amet consectettur adipiscing elit
+
+The QUICK Brown FoX
+fox, dog. "quick" (brown) [jumped]
+
+123 3.14159 -42 0xFF
+hello-world can't shouldn't C++
+
+@fox #dog $quick %brown ^jumped &over *lazy*
+quick_brown fox/dog back\slash
+
+foox foox
+supercalifragilisticexpialidocious
+pneumonoultramicroscopicsilicovolcanoconiosis

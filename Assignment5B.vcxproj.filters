@@ -15,16 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CSC242_Assignment5A.cpp">
+    <ClCompile Include="CSC242_Assignment5B.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="words.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="words_test.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
   </ItemGroup>
 </Project>
