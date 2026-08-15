@@ -1,6 +1,20 @@
 // CSC242_Assignment5.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+/* ---------------------------------------------------------------------------
+** I attest that this following code represents my own work and is subject to
+** the plagiarism policy found in the course syllabus.
+** 
+** Class: 	CSC 242
+** Assignment: 	Lesson # 5
+** File: 	source.cpp
+** Description: File spell checker.
+**
+** Author: 	Melanie Harris, Matthew Perea
+** Date: 	08/13/2026
+** -------------------------------------------------------------------------*/
+
+
 #include <iostream>
 #include <fstream>
 #include <string>
